@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory WIP - PT. Topline Evergreen Manufacturing</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
+                <p class="company-desc">Inventory WIP Management</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Live Data
+                </div>
+                <a href="../../index.html" class="btn-login">
+                    🏠 Beranda
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Inventory WIP Management</h1>
+                <p>Monitor dan kelola inventory Work in Process secara real-time</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- WIP Inventory Table -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">📦</div>
+                            <h2>WIP Inventory Status</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-success btn-sm" onclick="addNew()">Add WIP</button>
+                            <button class="btn btn-primary btn-sm" onclick="exportCSV()">Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div style="margin-bottom: 1rem;">
+                            <input type="text" id="searchInput" placeholder="Search WIP..." style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; width: 300px;">
+                            <button onclick="searchData()" style="padding: 8px 16px; margin-left: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">Search</button>
+                        </div>
+                        <table class="data-table" id="wipTable">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Part Number</th>
+                                    <th>Model</th>
+                                    <th>Description</th>
+                                    <th>Lot Number</th>
+                                    <th>Quantity</th>
+                                    <th>Operator</th>
+                                    <th>PIC QC</th>
+                                    <th>PIC Produksi</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wipTableBody">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
+
+    <script src="../../assets/js/js-produksi/invwip-new.js"></script>
+</body>
+</html>

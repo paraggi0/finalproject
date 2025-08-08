@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard WH - Warehouse Management | PT. Topline Evergreen Manufacturing</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/css-wh/dashboard-wh.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .company-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .auth-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .home-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .workflow-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .workflow-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #6b7280;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .btn-secondary {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+            border: 1px solid rgba(107, 114, 128, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(107, 114, 128, 0.2);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .realtime-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1001;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .workflow-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+            
+            .card-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Real-time Connection Indicator -->
+    <div class="realtime-indicator">
+        <div class="status-dot"></div>
+        Live System
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1>PT. Topline Evergreen Manufacturing</h1>
+                <div class="company-subtitle">Warehouse Management System</div>
+            </div>
+            <div class="auth-section">
+                <button class="home-btn" onclick="goHome()" title="Back to Home">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m0 0h3m-3 0v-4a1 1 0 011-1h2a1 1 0 011 1v4m-3 0h3m0 0a1 1 0 001-1V10m-1 0L12 5"/>
+                    </svg>
+                    Home
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">🏬 Dashboard Admin Warehouse</h1>
+            <p class="dashboard-subtitle">Sistem Manajemen Gudang & Distribusi</p>
+        </div>
+
+        <!-- Workflow Cards -->
+        <div class="workflow-container">
+            <!-- Inventory Stock Update -->
+            <div class="workflow-card" onclick="navigateToModule('invfg.html')">
+                <div class="card-icon">📦</div>
+                <h3 class="card-title">Inventory Stock Update</h3>
+                <p class="card-description">
+                    Update dan monitoring stok barang jadi dalam gudang. 
+                    Kelola inventori dengan tracking real-time.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="event.stopPropagation(); openModule('invfg.html')">
+                        Buka Modul
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); viewReport('inventory')">
+                        Lihat Laporan
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <span class="status-indicator status-active">● Aktif</span>
+                </div>
+            </div>
+
+            <!-- Delivery Checklist -->
+            <div class="workflow-card" onclick="navigateToModule('dc.html')">
+                <div class="card-icon">✅</div>
+                <h3 class="card-title">Delivery Checklist</h3>
+                <p class="card-description">
+                    Checklist pengiriman dan verifikasi kelengkapan barang 
+                    sebelum dikirim ke customer.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="event.stopPropagation(); openModule('dc.html')">
+                        Buka Modul
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); viewReport('delivery')">
+                        Lihat Laporan
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <span class="status-indicator status-active">● Aktif</span>
+                </div>
+            </div>
+
+            <!-- Delivery Order (DO) -->
+            <div class="workflow-card" onclick="navigateToModule('do.html')">
+                <div class="card-icon">🚚</div>
+                <h3 class="card-title">Delivery Order (DO)</h3>
+                <p class="card-description">
+                    Manajemen surat jalan dan delivery order untuk 
+                    pengiriman barang ke customer.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="event.stopPropagation(); openModule('do.html')">
+                        Buka Modul
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); viewReport('do')">
+                        Lihat Laporan
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <span class="status-indicator status-active">● Aktif</span>
+                </div>
+            </div>
+
+            <!-- Return by Customer -->
+            <div class="workflow-card" onclick="navigateToModule('return-wh.html')">
+                <div class="card-icon">↩️</div>
+                <h3 class="card-title">Return by Customer</h3>
+                <p class="card-description">
+                    Pengelolaan barang retur dari customer, termasuk 
+                    verifikasi dan processing return.
+                </p>
+                <div class="card-actions">
+                    <button class="action-btn btn-primary" onclick="event.stopPropagation(); openModule('return-wh.html')">
+                        Buka Modul
+                    </button>
+                    <button class="action-btn btn-secondary" onclick="event.stopPropagation(); viewReport('return')">
+                        Lihat Laporan
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <span class="status-indicator status-pending">● Monitoring</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Section -->
+        <div style="background: rgba(255, 255, 255, 0.95); border-radius: 16px; padding: 30px; margin-top: 30px;">
+            <h3 style="color: #1f2937; margin-bottom: 20px; text-align: center;">📊 Quick Statistics</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div style="text-align: center; padding: 15px;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #3b82f6;">156</div>
+                    <div style="color: #6b7280; font-size: 14px;">Total Stock Items</div>
+                </div>
+                <div style="text-align: center; padding: 15px;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #10b981;">23</div>
+                    <div style="color: #6b7280; font-size: 14px;">Pending Deliveries</div>
+                </div>
+                <div style="text-align: center; padding: 15px;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #f59e0b;">8</div>
+                    <div style="color: #6b7280; font-size: 14px;">Returns Processing</div>
+                </div>
+                <div style="text-align: center; padding: 15px;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #ef4444;">2</div>
+                    <div style="color: #6b7280; font-size: 14px;">Critical Stock</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../../assets/js/js-wh/dashboard-wh.js"></script>
+    <script>
+        // Navigation functions
+        function navigateToModule(module) {
+            window.location.href = module;
+        }
+
+        function openModule(module) {
+            window.open(module, '_blank');
+        }
+
+        function viewReport(type) {
+            alert(`Membuka laporan ${type}...`);
+            // Implement report viewing logic
+        }
+
+        // Real-time updates simulation
+        function updateStats() {
+            // Simulate real-time data updates
+            console.log('Updating warehouse statistics...');
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Warehouse Dashboard loaded');
+            
+            // Start real-time updates
+            setInterval(updateStats, 30000); // Update every 30 seconds
+            
+            // Add click animations
+            const cards = document.querySelectorAll('.workflow-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+        
+        // Navigation function
+        function goHome() {
+            // Clear user session data if needed
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userName');
+            
+            // Redirect to home page
+            window.location.href = '../../index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>PT. Topline Evergreen Manufacturing - Dashboard</title>
+    <meta name="description" content="Dashboard Monitoring PT. Topline Evergreen Manufacturing">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    
+    <!-- External CSS Files -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
+                <p class="company-desc">Manufacturing Dashboard</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Live Data
+                </div>
+                <a href="pages/login.html" class="btn-login">
+                    Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Dashboard Monitoring Real-time</h1>
+                <p>Real-time monitoring stock WIP, Finished Good, Material, Component dan Status Mesin</p>
+            </div>
+
+            <!-- Quick Stats Overview -->
+            <div class="dashboard-content">
+                <div class="stats-overview">
+                    <div class="stat-card urgent">
+                        <div class="stat-content">
+                            <h3 id="totalWipStock">0</h3>
+                            <p>Total Stock WIP</p>
+                            <span class="stat-trend" id="wipTrend">↑ 5.2%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-content">
+                            <h3 id="totalFgStock">0</h3>
+                            <p>Total Stock FG</p>
+                            <span class="stat-trend" id="fgTrend">↑ 2.1%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-content">
+                            <h3 id="totalMaterialStock">0</h3>
+                            <p>Total Stock Material</p>
+                            <span class="stat-trend" id="materialTrend">↓ 1.3%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-content">
+                            <h3 id="runningMachines">0</h3>
+                            <p>Mesin Running</p>
+                            <span class="stat-trend" id="machineTrend">85%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock WIP Real-time Table -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>Stock WIP Real-time</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-primary btn-sm" onclick="refreshWipData()">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="wipTable">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Description</th>
+                                    <th>Qty WIP</th>
+                                    <th>Unit</th>
+                                    <th>Location</th>
+                                    <th>Last Update</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wipTableBody">
+                                <!-- Data akan dimuat via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Stock Finished Good Table -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon"></div>
+                            <h2>Stock Finished Good & Minimum Stock</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-primary btn-sm" onclick="refreshFgData()">🔄 Refresh</button>
+                            <button class="btn btn-secondary btn-sm" onclick="exportFgCSV()">📊 Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="fgTable">
+                            <thead>
+                                <tr>
+                                    <th>Product Code</th>
+                                    <th>Description</th>
+                                    <th>Current Stock</th>
+                                    <th>Minimum Stock</th>
+                                    <th>Delivery Schedule</th>
+                                    <th>Status Alert</th>
+                                    <th>Last Update</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fgTableBody">
+                                <!-- Data akan dimuat via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Stock Material & Component Table -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon"></div>
+                            <h2>Stock Material & Component</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-primary btn-sm" onclick="refreshMaterialData()">🔄 Refresh</button>
+                            <button class="btn btn-secondary btn-sm" onclick="exportMaterialCSV()">📊 Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="materialTable">
+                            <thead>
+                                <tr>
+                                    <th>Material Code</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Current Stock</th>
+                                    <th>Minimum Stock</th>
+                                    <th>Arrival Schedule</th>
+                                    <th>Supplier</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materialTableBody">
+                                <!-- Data akan dimuat via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Machine Status Table -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon"></div>
+                            <h2>Status Mesin Running</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-primary btn-sm" onclick="refreshMachineData()">🔄 Refresh</button>
+                            <button class="btn btn-secondary btn-sm" onclick="exportMachineCSV()">📊 Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="machineTable">
+                            <thead>
+                                <tr>
+                                    <th>Machine ID</th>
+                                    <th>Machine Name</th>
+                                    <th>Status</th>
+                                    <th>Current Product</th>
+                                    <th>Operator</th>
+                                    <th>Start Time</th>
+                                    <th>Target Output</th>
+                                    <th>Actual Output</th>
+                                    <th>Efficiency</th>
+                                </tr>
+                            </thead>
+                            <tbody id="machineTableBody">
+                                <!-- Data akan dimuat via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Department Access Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>Access Department</h2>
+                        </div>
+                    </div>
+                    <div class="department-grid">
+                        <a href="pages/produksi/dashboard-produksi.html" class="department-card produksi">
+                            <h3>Production</h3>
+                            <p>Manufacturing & Production Control</p>
+                        </a>
+                        <a href="pages/qc/dashboard-qc.html" class="department-card qc">
+                            <h3>Quality Control</h3>
+                            <p>Quality Assurance & Inspection</p>
+                        </a>
+                        <a href="pages/wh/dashboard-wh.html" class="department-card warehouse">
+                            <h3>Warehouse</h3>
+                            <p>Inventory & Warehouse Management</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/index.js"></script>
+</body>
+</html>

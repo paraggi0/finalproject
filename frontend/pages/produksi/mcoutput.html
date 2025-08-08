@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Output - PT. Topline Evergreen Manufacturing</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
+                <p class="company-desc">Machine Output Management</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Live Data
+                </div>
+                <a href="../../index.html" class="btn-login">
+                    Beranda
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Machine Output Management</h1>
+                <p>Monitor output produksi dari semua mesin injection secara real-time</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Machine Output Table -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>Production Output Records</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-success btn-sm" onclick="addNew()">Add Output</button>
+                            <button class="btn btn-primary btn-sm" onclick="exportCSV()">Export CSV</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div style="margin-bottom: 1rem;">
+                            <input type="text" id="searchInput" placeholder="Search output records..." style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; width: 300px;">
+                            <button onclick="searchData()" style="padding: 8px 16px; margin-left: 8px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">Search</button>
+                        </div>
+                        <table class="data-table" id="outputTable">
+                            <thead>
+                                <tr>
+                                    <th>Machine</th>
+                                    <th>Customer</th>
+                                    <th>Part Number</th>
+                                    <th>Model</th>
+                                    <th>Description</th>
+                                    <th>Quantity Ok</th>
+                                    <th>Quantity NG</th>
+                                    <th>Operator</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="outputTableBody">
+                                <tr>
+                                    <td>A01</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A02</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A03</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A04</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A05</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A06</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A07</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A08</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A09</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A10</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A11</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A12</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>A13</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
+
+    <!-- Enhanced JavaScript Components -->
+    <script src="../../assets/js/js-produksi/notification-system.js"></script>
+    <script src="../../assets/js/js-produksi/cascading-dropdown.js"></script>
+    <script src="../../assets/js/js-produksi/universal-export.js"></script>
+    <script src="../../assets/js/js-produksi/mcoutput-real.js"></script>
+</body>
+</html>

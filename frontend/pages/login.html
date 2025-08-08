@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PT. Topline Evergreen Manufacturing</title>
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+
+    <!-- External CSS Files -->
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/login.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <!-- Company Header -->
+        <div class="company-header">
+            <div class="logo">
+                <div class="logo-icon">🏭</div>
+            </div>
+            <h1 class="company-name">PT. TOPLINE EVERGREEN MANUFACTURING</h1>
+            <p class="company-subtitle">Execution System</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="login-card">
+            <h2 class="login-title">Sign In</h2>
+            <p class="login-subtitle">Please sign in to your account</p>
+            
+            <!-- Alert Messages -->
+            <div id="alertMessage" class="alert" style="display: none;"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Enter your username"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="role" class="form-label">Access Role</label>
+                    <select 
+                        id="role" 
+                        name="role" 
+                        class="form-input" 
+                        required
+                    >
+                        <option value="">Select your role</option>
+                        <option value="production">Production - Monitor production processes and machine status</option>
+                        <option value="qc">Quality Control - Manage quality inspection and testing</option>
+                        <option value="warehouse">Warehouse - Handle inventory and goods management</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="loginButton" class="login-btn">
+                    <span class="button-text">Sign In</span>
+                    <div class="loading-spinner" style="display: none;"></div>
+                </button>
+            </form>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="back-link">
+            <a href="../index.html">← Back to Home</a>
+        </div>
+        
+        <!-- Footer -->
+        <div class="login-footer">
+            <p>&copy; 2025 PT. Topline Evergreen Manufacturing. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="../assets/js/login.js"></script>
+</body>
+</html>
