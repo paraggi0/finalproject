@@ -106,7 +106,7 @@ PT. Topline Evergreen Manufacturing/
    - **Backend API**: http://localhost:3001
    - **API Documentation**: http://localhost:3001/api/health
 
-### Alternative Setup (Demo Mode)
+### Production Setup
 
 If you don't have XAMPP or want to see the interface quickly:
 
@@ -182,9 +182,9 @@ const USE_DEMO_DATA = false; // Toggle demo/live data
 - **Loading States**: Connection status feedback
 - **Error Handling**: Graceful fallback to demo data
 
-## 🧪 Testing
+## 🚀 Production Deployment
 
-### Manual Testing
+### Production Verification
 1. **Backend Health**: Visit http://localhost:3001/api/health
 2. **Database Connection**: Visit http://localhost:3001/api/db-test
 3. **API Endpoints**: Test with Postman or browser

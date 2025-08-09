@@ -1051,7 +1051,28 @@
             }
         ];
 
-        function loadSampleData() {
+        // Load data from API
+        async function loadData() {
+            try {
+                const response = await fetch('/api/website/return');
+                if (response.ok) {
+                    const result = await response.json();
+                    returnData = result.data || [];
+                } else {
+                    console.error('Failed to load return data');
+                    returnData = [];
+                }
+                displayData();
+                updateStatistics();
+            } catch (error) {
+                console.error('Error loading return data:', error);
+                returnData = [];
+                displayData();
+                updateStatistics();
+            }
+        }
+
+        function displayData() {
             const tableBody = document.getElementById('returnTableBody');
             tableBody.innerHTML = '';
 

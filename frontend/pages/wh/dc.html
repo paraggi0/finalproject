@@ -977,7 +977,28 @@
             }
         ];
 
-        function loadSampleData() {
+        // Load data from API
+        async function loadData() {
+            try {
+                const response = await fetch('/api/website/dc');
+                if (response.ok) {
+                    const result = await response.json();
+                    dcData = result.data || [];
+                } else {
+                    console.error('Failed to load DC data');
+                    dcData = [];
+                }
+                displayData();
+                updateStatistics();
+            } catch (error) {
+                console.error('Error loading DC data:', error);
+                dcData = [];
+                displayData();
+                updateStatistics();
+            }
+        }
+
+        function displayData() {
             const tableBody = document.getElementById('deliveryTableBody');
             tableBody.innerHTML = '';
 

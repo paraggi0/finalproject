@@ -99,7 +99,7 @@ function getFormData() {
     return {
         username: document.getElementById('username')?.value?.trim() || '',
         password: document.getElementById('password')?.value || '',
-        role: document.getElementById('role')?.value || 'production'
+        role: document.getElementById('role')?.value || ''
     };
 }
 
