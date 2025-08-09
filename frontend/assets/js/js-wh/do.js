@@ -13,9 +13,9 @@ let currentOrder = null;
 let orderItems = [];
 
 // Database API configuration
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3001/api/warehouse';
 const DB_ENDPOINTS = {
-    orders: '/delivery-orders',
+    orders: '/do',
     customers: '/customers',
     products: '/products',
     orderItems: '/order-items'

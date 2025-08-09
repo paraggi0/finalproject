@@ -23,6 +23,8 @@ const machinesRoutes = require('./routes/machines'); // Machines API untuk front
 const masterDataRoutes = require('./routes/masterData'); // Master Data routes
 const inventoryRoutes = require('./routes/inventory'); // Inventory API untuk material & component
 const usersRoutes = require('./routes/users'); // User management routes
+const qcRoutes = require('./routes/qc'); // QC routes untuk Quality Control
+const warehouseRoutes = require('./routes/warehouse'); // Warehouse routes untuk WH management
 
 /**
  * PT. Topline Evergreen Manufacturing Production System
@@ -109,6 +111,8 @@ app.use('/api/machines', machinesRoutes); // Machines API untuk frontend dashboa
 app.use('/api/master', masterDataRoutes); // Master Data API untuk material & component
 app.use('/api/inventory', inventoryRoutes); // Inventory API untuk material & component stock
 app.use('/api/users', usersRoutes); // User management API untuk web & android
+app.use('/api/qc', qcRoutes); // QC API untuk Quality Control modules
+app.use('/api/warehouse', warehouseRoutes); // Warehouse API untuk WH management modules
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
