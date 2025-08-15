@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OQC - Outgoing Quality Control | PT. Topline Evergreen Manufacturing</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
+                <p class="company-desc">OQC - Outgoing Quality Control</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Live Data
+                </div>
+                <a href="dashboard-qc.html" class="btn-login">
+                    Dashboard QC
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>📤 OQC - Outgoing Quality Control</h1>
+                <p>Inspeksi final produk jadi sebelum pengiriman ke customer</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- OQC Controls Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>OQC Management</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-primary btn-sm" onclick="exportCSV()">Export CSV</button>
+                            <button class="btn btn-secondary btn-sm" onclick="refreshData()">Refresh</button>
+                        </div>
+                    </div>
+                    
+                    <!-- OQC Table -->
+                    <div class="table-container">
+                        <table class="data-table" id="oqcTable">
+                            <thead>
+                                <tr>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>Batch Number</th>
+                                    <th>Qty Produced</th>
+                                    <th>Qty Inspected</th>
+                                    <th>Inspection Date</th>
+                                    <th>Inspector</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="oqcTableBody">
+                                <!-- Data will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>OQC Statistics</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🏭</div>
+                            <div class="stat-content">
+                                <h3 id="totalProduced">0</h3>
+                                <p>Total Produced</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-content">
+                                <h3 id="totalPassed">0</h3>
+                                <p>Passed Final QC</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">❌</div>
+                            <div class="stat-content">
+                                <h3 id="totalRejected">0</h3>
+                                <p>Rejected Items</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-content">
+                                <h3 id="totalShipped">0</h3>
+                                <p>Ready to Ship</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
+
+    <script src="../../assets/js/js-qc/oqc.js"></script>
+</body>
+</html>

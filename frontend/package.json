@@ -1,0 +1,18 @@
+{
+  "name": "system-topline",
+  "version": "1.0.0",
+  "description": "System Manangement PT. Topline manufacturing_system. Di Buat Oleh Supiana Sakti Paraggi (Lango Official) - 2023",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "serve": "python -m http.server 8080"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.3"
+  }
+}

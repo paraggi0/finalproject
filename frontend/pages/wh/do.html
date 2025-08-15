@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DO - Delivery Order | PT. Topline Evergreen Manufacturing</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/css-wh/do.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1>PT. Topline Evergreen Manufacturing</h1>
+                <div class="company-subtitle">DO - Delivery Order Management</div>
+            </div>
+            <a href="dashboard-wh.html" class="back-btn">← Kembali ke Dashboard WH</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">📋 Delivery Order (DO)</h1>
+            <p class="page-subtitle">Manajemen surat jalan dan proses pengiriman</p>
+            <div class="order-indicator">
+                <span class="pulse"></span>
+                Order processing system active
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="controls-grid">
+                <div class="search-section">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Cari DO number, customer, status...">
+                    <button class="btn btn-primary" onclick="searchOrders()">
+                        <span>🔍</span> Search
+                    </button>
+                </div>
+                <button class="btn btn-success" onclick="openAddModal()">
+                    <span>➕</span> Create DO
+                </button>
+                <button class="btn btn-warning" onclick="batchProcessing()">
+                    <span>📦</span> Batch Process
+                </button>
+                <button class="btn btn-danger" onclick="printDO()">
+                    <span>🖨️</span> Print DO
+                </button>
+                <button class="btn btn-secondary" onclick="exportReport()">
+                    <span>📊</span> Export Report
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-title">Total Orders</div>
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-change positive">
+                    <span>📈</span> Order tracking
+                </div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-title">Pending Orders</div>
+                <div class="stat-value" id="pendingOrders">0</div>
+                <div class="stat-change warning">
+                    <span>⏳</span> Need processing
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-title">Ready to Ship</div>
+                <div class="stat-value" id="readyToShip">0</div>
+                <div class="stat-change positive">
+                    <span>🚚</span> Ready for pickup
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-title">Total Value</div>
+                <div class="stat-value" id="totalValue">$0</div>
+                <div class="stat-change positive">
+                    <span>💎</span> Order value
+                </div>
+            </div>
+        </div>
+
+        <div class="order-overview">
+            <div class="overview-card">
+                <div class="overview-title">
+                    <span>🔥</span> Today's Priority Orders
+                </div>
+                <div class="overview-list">
+                    <div class="overview-item">
+                        <span>DO-2024-001</span>
+                        <div>
+                            <span class="status-confirmed">CONFIRMED</span>
+                            <span style="margin-left: 8px;">Customer ABC</span>
+                        </div>
+                    </div>
+                    <div class="overview-item">
+                        <span>DO-2024-002</span>
+                        <div>
+                            <span class="status-picking">PICKING</span>
+                            <span style="margin-left: 8px;">Customer XYZ</span>
+                        </div>
+                    </div>
+                    <div class="overview-item">
+                        <span>DO-2024-003</span>
+                        <div>
+                            <span class="status-packed">PACKED</span>
+                            <span style="margin-left: 8px;">Customer DEF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-title">
+                    <span>📊</span> Order Status Summary
+                </div>
+                <div class="overview-list">
+                    <div class="overview-item">
+                        <span>Draft Orders</span>
+                        <span style="color: #9ca3af;">2 orders</span>
+                    </div>
+                    <div class="overview-item">
+                        <span>Confirmed Orders</span>
+                        <span style="color: #3b82f6;">5 orders</span>
+                    </div>
+                    <div class="overview-item">
+                        <span>In Processing</span>
+                        <span style="color: #fbbf24;">3 orders</span>
+                    </div>
+                    <div class="overview-item">
+                        <span>Ready to Ship</span>
+                        <span style="color: #10b981;">4 orders</span>
+                    </div>
+                </div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-title">
+                    <span>📈</span> Performance Metrics
+                </div>
+                <div class="overview-list">
+                    <div class="overview-item">
+                        <span>Orders Today</span>
+                        <span style="color: #10b981;">8 orders</span>
+                    </div>
+                    <div class="overview-item">
+                        <span>Avg Processing Time</span>
+                        <span style="color: #3b82f6;">2.5 hours</span>
+                    </div>
+                    <div class="overview-item">
+                        <span>On-time Delivery</span>
+                        <span style="color: #10b981;">94%</span>
+                    </div>
+                    <div class="overview-item">
+                        <span>Order Accuracy</span>
+                        <span style="color: #10b981;">98.5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-actions">
+            <div class="action-card" onclick="orderPicking()">
+                <div class="action-icon">📋</div>
+                <div class="action-title">Order Picking</div>
+                <div class="action-desc">Generate picking lists and warehouse instructions</div>
+            </div>
+            <div class="action-card" onclick="packingSlip()">
+                <div class="action-icon">📦</div>
+                <div class="action-title">Packing Slip</div>
+                <div class="action-desc">Create packing slips and shipping labels</div>
+            </div>
+            <div class="action-card" onclick="stockReservation()">
+                <div class="action-icon">🔒</div>
+                <div class="action-title">Stock Reservation</div>
+                <div class="action-desc">Reserve inventory for confirmed orders</div>
+            </div>
+            <div class="action-card" onclick="shippingIntegration()">
+                <div class="action-icon">🚚</div>
+                <div class="action-title">Shipping Integration</div>
+                <div class="action-desc">Coordinate with delivery and logistics</div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <span>📋</span> Delivery Order Management
+                </h3>
+                <div class="table-actions">
+                    <button class="btn btn-primary btn-sm" onclick="refreshData()">
+                        <span>🔄</span> Refresh
+                    </button>
+                    <button class="btn btn-warning btn-sm" onclick="bulkUpdate()">
+                        <span>📝</span> Bulk Update
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>DO Number</th>
+                            <th>Customer</th>
+                            <th>Order Date</th>
+                            <th>Delivery Date</th>
+                            <th>Items</th>
+                            <th>Total Value</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Create New Delivery Order</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="orderForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Order Number</label>
+                        <input type="text" class="form-input" id="orderNumber" placeholder="e.g., DO-2024-001" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Customer</label>
+                        <input type="text" class="form-input" id="customer" placeholder="Customer Name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Customer Code</label>
+                        <input type="text" class="form-input" id="customerCode" placeholder="Customer Code" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Customer PO</label>
+                        <input type="text" class="form-input" id="customerPO" placeholder="Customer Purchase Order">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Order Date</label>
+                        <input type="date" class="form-input" id="orderDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Requested Date</label>
+                        <input type="date" class="form-input" id="requestedDate" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Sales Person</label>
+                        <select class="form-select" id="salesPerson" required>
+                            <option value="">Select Sales Person</option>
+                            <option value="Sales Manager">Sales Manager</option>
+                            <option value="Sales Rep 1">Sales Rep 1</option>
+                            <option value="Sales Rep 2">Sales Rep 2</option>
+                            <option value="Sales Rep 3">Sales Rep 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Payment Terms</label>
+                        <select class="form-select" id="paymentTerms" required>
+                            <option value="">Select Terms</option>
+                            <option value="NET 30">Net 30 Days</option>
+                            <option value="NET 15">Net 15 Days</option>
+                            <option value="COD">Cash on Delivery</option>
+                            <option value="Advance">Advance Payment</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Shipping Method</label>
+                        <select class="form-select" id="shippingMethod" required>
+                            <option value="">Select Method</option>
+                            <option value="Standard Delivery">Standard Delivery</option>
+                            <option value="Express Delivery">Express Delivery</option>
+                            <option value="Next Day Delivery">Next Day Delivery</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" id="priority" required>
+                            <option value="">Select Priority</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="high">High</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Delivery Address</label>
+                    <textarea class="form-textarea" id="deliveryAddress" placeholder="Complete delivery address..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Contact Person</label>
+                        <input type="text" class="form-input" id="contactPerson" placeholder="Contact Person Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contact Number</label>
+                        <input type="tel" class="form-input" id="contactNumber" placeholder="Phone Number" required>
+                    </div>
+                </div>
+
+                <!-- Order Items Section -->
+                <div class="order-items-section">
+                    <div class="section-title">📦 Order Items</div>
+                    <div id="itemsTableContainer">
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Code</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Total Price</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itemsTableBody">
+                                <!-- Items will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="add-item-section">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" class="form-input" id="itemProductCode" placeholder="Product Code">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-input" id="itemProductName" placeholder="Product Name">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" class="form-input" id="itemQuantity" placeholder="Quantity" min="1">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" class="form-input" id="itemUnitPrice" placeholder="Unit Price" step="0.01" min="0">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success" id="addItemBtn">+ Add Item</button>
+                    </div>
+                    
+                    <div class="order-totals">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Total Items</label>
+                                <input type="number" class="form-input" id="orderTotalItems" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Total Quantity</label>
+                                <input type="number" class="form-input" id="orderTotalQuantity" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Total Value</label>
+                            <input type="text" class="form-input" id="orderTotalValue" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Special Instructions</label>
+                    <textarea class="form-textarea" id="specialInstructions" placeholder="Any special delivery or handling instructions..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../assets/js/js-wh/do.js"></script>
+</body>
+</html>

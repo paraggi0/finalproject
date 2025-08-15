@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QC Dashboard - PT. Topline Evergreen Manufacturing</title>
+    
+    <!-- CSS Framework -->
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
+                <p class="company-desc">QC Dashboard</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Live Data
+                </div>
+                <a href="../../index.html" class="btn-login">
+                    Beranda
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>QC Dashboard</h1>
+                <p>Monitor proses Quality Control, inspeksi, dan kontrol kualitas secara real-time</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Quick Actions Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <div class="section-icon">🔍</div>
+                            <h2>Quick Actions</h2>
+                        </div>
+                        <div class="section-period">Quality Control</div>
+                    </div>
+                    <div class="table-container">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 10px;">
+                            <a href="iqc.html" class="btn" style="text-decoration: none; padding: 1rem; text-align: center; border-radius: 8px; background: #3b82f6; color: white; display: block;">
+                                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📥 IQC</div>
+                                <div style="font-size: 0.85rem; opacity: 0.9;">Incoming Quality Control</div>
+                            </a>
+                            <a href="oqc.html" class="btn" style="text-decoration: none; padding: 1rem; text-align: center; border-radius: 8px; background: #10b981; color: white; display: block;">
+                                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📤 OQC</div>
+                                <div style="font-size: 0.85rem; opacity: 0.9;">Outgoing Quality Control</div>
+                            </a>
+                            <a href="rqc.html" class="btn" style="text-decoration: none; padding: 1rem; text-align: center; border-radius: 8px; background: #f59e0b; color: white; display: block;">
+                                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🔄 RQC</div>
+                                <div style="font-size: 0.85rem; opacity: 0.9;">Returned Quality Control</div>
+                            </a>
+                            <a href="ng-qc.html" class="btn" style="text-decoration: none; padding: 1rem; text-align: center; border-radius: 8px; background: #ef4444; color: white; display: block;">
+                                <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">❌ NG QC</div>
+                                <div style="font-size: 0.85rem; opacity: 0.9;">Non-Good Quality Control</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
+
+    <script src="../../assets/js/js-qc/dashboard-qc.js"></script>
+</body>
+</html>

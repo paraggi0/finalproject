@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NG QC - Non-Good Quality Control | PT. Topline Evergreen Manufacturing</title>
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/index.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="company-info">
+                <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
+                <p class="company-desc">NG QC - Non-Good Quality Control</p>
+            </div>
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    Live Data
+                </div>
+                <a href="dashboard-qc.html" class="btn-login">
+                    Dashboard QC
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>❌ NG QC - Non-Good Quality Control</h1>
+                <p>Penanganan produk reject dan non-conforming products</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- NG QC Controls Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>NG QC Management</h2>
+                        </div>
+                        <div class="section-filter">
+                            <button class="btn btn-primary btn-sm" onclick="exportCSV()">Export CSV</button>
+                            <button class="btn btn-secondary btn-sm" onclick="refreshData()">Refresh</button>
+                        </div>
+                    </div>
+                    
+                    <!-- NG QC Table -->
+                    <div class="table-container">
+                        <table class="data-table" id="ngqcTable">
+                            <thead>
+                                <tr>
+                                    <th>NG ID</th>
+                                    <th>Product Code</th>
+                                    <th>Batch Number</th>
+                                    <th>Defect Type</th>
+                                    <th>Qty NG</th>
+                                    <th>Detection Point</th>
+                                    <th>Date Detected</th>
+                                    <th>Inspector</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ngqcTableBody">
+                                <!-- Data will be loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <h2>NG QC Statistics</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🚫</div>
+                            <div class="stat-content">
+                                <h3 id="totalNG">0</h3>
+                                <p>Total NG Items</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔧</div>
+                            <div class="stat-content">
+                                <h3 id="totalRework">0</h3>
+                                <p>Rework Items</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🗑️</div>
+                            <div class="stat-content">
+                                <h3 id="totalScrap">0</h3>
+                                <p>Scrap Items</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-content">
+                                <h3 id="totalPending">0</h3>
+                                <p>Pending Decision</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
+
+    <script src="../../assets/js/js-qc/ng-qc.js"></script>
+</body>
+</html>
