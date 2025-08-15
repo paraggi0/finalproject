@@ -62,19 +62,20 @@ async function loadAllData() {
  */
 async function loadWipData() {
     try {
-        // Connect to backend API
-        const response = await fetch('http://localhost:3001/api/stock/wip');
-        if (response.ok) {
-            dashboardData.wip = await response.json();
-        } else {
-            // Try alternative production endpoint
-            const altResponse = await fetch('http://localhost:3001/api/production/wip');
-            if (altResponse.ok) {
-                const wipData = await altResponse.json();
-                dashboardData.wip = wipData.data || wipData;
-            } else {
-                throw new Error('Failed to load WIP data from all endpoints');
+        // Connect to backend API with proper headers
+        const response = await fetch('http://localhost:3001/api/website/stock/wip', {
+            headers: {
+                'x-api-key': 'website-admin-2025',
+                'Content-Type': 'application/json'
             }
+        });
+        
+        if (response.ok) {
+            const wipResponse = await response.json();
+            dashboardData.wip = wipResponse.data?.wip_records || wipResponse.data || [];
+        } else {
+            console.error('WIP API response not ok:', response.status);
+            dashboardData.wip = [];
         }
     } catch (error) {
         console.error('❌ Backend connection failed:', error);
@@ -88,11 +89,19 @@ async function loadWipData() {
  */
 async function loadFinishedGoodData() {
     try {
-        const response = await fetch('http://localhost:3001/api/stock/finished-good');
+        const response = await fetch('http://localhost:3001/api/website/stock/finished-goods', {
+            headers: {
+                'x-api-key': 'website-admin-2025',
+                'Content-Type': 'application/json'
+            }
+        });
+        
         if (response.ok) {
-            dashboardData.finishedGood = await response.json();
+            const fgResponse = await response.json();
+            dashboardData.finishedGood = fgResponse.data?.finished_goods || fgResponse.data || [];
         } else {
-            throw new Error('Failed to load Finished Good data');
+            console.error('Finished goods API response not ok:', response.status);
+            dashboardData.finishedGood = [];
         }
     } catch (error) {
         console.error('❌ Backend connection failed:', error);
@@ -106,11 +115,21 @@ async function loadFinishedGoodData() {
  */
 async function loadMaterialData() {
     try {
-        const response = await fetch('http://localhost:3001/api/stock/materials');
+        // Since there's no specific materials endpoint, let's use production endpoint or create sample data
+        const response = await fetch('http://localhost:3001/api/website/production/dashboard', {
+            headers: {
+                'x-api-key': 'website-admin-2025',
+                'Content-Type': 'application/json'
+            }
+        });
+        
         if (response.ok) {
-            dashboardData.materials = await response.json();
+            const prodResponse = await response.json();
+            // Extract materials data or use empty array
+            dashboardData.materials = prodResponse.data?.materials || [];
         } else {
-            throw new Error('Failed to load Material data');
+            console.error('Materials API response not ok:', response.status);
+            dashboardData.materials = [];
         }
     } catch (error) {
         console.error('❌ Backend connection failed:', error);
@@ -124,11 +143,20 @@ async function loadMaterialData() {
  */
 async function loadMachineData() {
     try {
-        const response = await fetch('http://localhost:3001/api/machines/status');
+        const response = await fetch('http://localhost:3001/api/website/production/dashboard', {
+            headers: {
+                'x-api-key': 'website-admin-2025',
+                'Content-Type': 'application/json'
+            }
+        });
+        
         if (response.ok) {
-            dashboardData.machines = await response.json();
+            const prodResponse = await response.json();
+            // Extract machines data or use empty array
+            dashboardData.machines = prodResponse.data?.machines || [];
         } else {
-            throw new Error('Failed to load Machine data');
+            console.error('Machine data API response not ok:', response.status);
+            dashboardData.machines = [];
         }
     } catch (error) {
         console.error('❌ Backend connection failed:', error);

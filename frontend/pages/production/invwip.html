@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IQC - Incoming Quality Control | PT. Topline Evergreen Manufacturing</title>
+    <title>Inventory WIP - PT. Topline Evergreen Manufacturing</title>
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/components.css">
-    <link rel="stylesheet" href="../../assets/css/index.css">
     <link rel="stylesheet" href="../../assets/css/crud.css">
 </head>
 <body>
@@ -15,40 +14,32 @@
         <div class="header-content">
             <div class="company-info">
                 <h1 class="company-title">PT. TOPLINE EVERGREEN</h1>
-                <p class="company-desc">IQC - Incoming Quality Control</p>
+                <p class="company-desc">Inventory WIP Management</p>
             </div>
             <div class="header-actions">
                 <div class="status-indicator">
                     <span class="status-dot"></span>
                     Live Data
                 </div>
-                <a href="dashboard-qc.html" class="btn-login">
-                    Dashboard QC
+                <a href="../../index.html" class="btn btn-secondary">
+                    🏠 Beranda
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- Main Dashboard -->
     <main class="dashboard-main">
         <div class="dashboard-container">
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1>📥 IQC - Incoming Quality Control</h1>
-                <p>Inspeksi kualitas bahan baku dan material yang masuk ke proses produksi</p>
-            </div>
-
-            <!-- Dashboard Content -->
-            <div class="dashboard-content">
-                <!-- CRUD Container will be inserted here -->
-                <div id="crudContainer"></div>
-            </div>
+            <!-- CRUD Interface Container -->
+            <div id="wipCrudContainer"></div>
         </div>
     </main>
 
     <div class="watermark">PT. Topline Evergreen Manufacturing 2025</div>
 
+    <!-- Scripts -->
     <script src="../../assets/js/crud-utils.js"></script>
-    <script src="../../assets/js/js-qc/iqc.js"></script>
+    <script src="../../assets/js/js-produksi/invwip.js"></script>
 </body>
 </html>

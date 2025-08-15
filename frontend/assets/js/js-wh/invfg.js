@@ -1,470 +1,417 @@
-// INVFG (Inventory Finished Goods) Module
-// PT. Topline Evergreen Manufacturing
+// Finished Goods Inventory CRUD Management
+// This module handles CRUD operations for finished goods inventory management
 
-// Global variables
-let inventoryData = [];
-let currentEditId = null;
-
-// Sample data for demonstration
-const sampleInventoryData = [
-    {
-        id: 'INV001',
-        productCode: 'TLE-2024-001',
-        productName: 'Elite Series A1',
-        currentStock: 250,
-        minStock: 100,
-        maxStock: 500,
-        location: 'Zone A-01',
-        unitPrice: 125.50,
-        unitMeasure: 'pcs',
-        batchNumber: 'BATCH2024001',
-        expiryDate: '2024-12-31',
-        supplier: 'Production Line 1',
-        status: 'optimal',
-        lastUpdate: '2024-01-15',
-        category: 'Elite Series'
-    },
-    {
-        id: 'INV002',
-        productCode: 'TLE-2024-002',
-        productName: 'Standard Series B2',
-        currentStock: 45,
-        minStock: 50,
-        maxStock: 300,
-        location: 'Zone B-02',
-        unitPrice: 89.75,
-        unitMeasure: 'pcs',
-        batchNumber: 'BATCH2024002',
-        expiryDate: '2024-11-30',
-        supplier: 'Production Line 2',
-        status: 'low',
-        lastUpdate: '2024-01-16',
-        category: 'Standard Series'
-    },
-    {
-        id: 'INV003',
-        productCode: 'TLE-2024-003',
-        productName: 'Premium Series C3',
-        currentStock: 180,
-        minStock: 75,
-        maxStock: 400,
-        location: 'Zone A-03',
-        unitPrice: 175.25,
-        unitMeasure: 'pcs',
-        batchNumber: 'BATCH2024003',
-        expiryDate: '2025-01-31',
-        supplier: 'Production Line 3',
-        status: 'optimal',
-        lastUpdate: '2024-01-17',
-        category: 'Premium Series'
-    },
-    {
-        id: 'INV004',
-        productCode: 'TLE-2024-004',
-        productName: 'Economy Series D4',
-        currentStock: 0,
-        minStock: 25,
-        maxStock: 200,
-        location: 'Zone C-01',
-        unitPrice: 45.00,
-        unitMeasure: 'pcs',
-        batchNumber: 'BATCH2024004',
-        expiryDate: '2024-10-31',
-        supplier: 'Production Line 4',
-        status: 'out-of-stock',
-        lastUpdate: '2024-01-18',
-        category: 'Economy Series'
-    }
-];
-
-// Initialize INVFG module
-function initializeINVFG() {
-    console.log('Initializing INVFG module...');
-    inventoryData = [...sampleInventoryData];
-    loadInventoryData();
-    updateStatistics();
-    setupEventListeners();
-}
-
-// Setup event listeners
-function setupEventListeners() {
-    // Form submission
-    const form = document.getElementById('inventoryForm');
-    if (form) {
-        form.addEventListener('submit', handleFormSubmit);
+class FinishedGoodsCRUD {
+    constructor() {
+        this.apiBaseUrl = 'http://localhost:3001/api/website';
+        this.apiKey = 'website-admin-2025';
+        this.currentData = [];
+        this.init();
     }
 
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', handleSearch);
-    }
-
-    // Close modal when clicking outside
-    const modal = document.getElementById('inventoryModal');
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-    }
-}
-
-// Load inventory data into table
-function loadInventoryData() {
-    const tableBody = document.getElementById('inventoryTableBody');
-    if (!tableBody) return;
-
-    tableBody.innerHTML = '';
-
-    inventoryData.forEach(item => {
-        const row = document.createElement('tr');
-        const totalValue = (item.currentStock * item.unitPrice).toFixed(2);
-        
-        row.innerHTML = `
-            <td>${item.productCode}</td>
-            <td>
-                ${item.productName}<br>
-                <small style="color: rgba(255, 255, 255, 0.7);">${item.category}</small>
-            </td>
-            <td>
-                <span class="stock-level ${getStatusClass(item.status)}">${item.currentStock}</span>
-                <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7);">
-                    Min: ${item.minStock} | Max: ${item.maxStock}
-                </div>
-            </td>
-            <td>${item.location}</td>
-            <td>$${item.unitPrice.toFixed(2)}</td>
-            <td>$${totalValue}</td>
-            <td>${item.batchNumber}</td>
-            <td><span class="inventory-status status-${item.status}">${item.status.replace('-', ' ').toUpperCase()}</span></td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn btn-primary btn-sm" onclick="editItem('${item.id}')">Edit</button>
-                    <button class="btn btn-warning btn-sm" onclick="adjustStock('${item.id}')">Adjust</button>
-                    <button class="btn btn-info btn-sm" onclick="viewDetails('${item.id}')">Details</button>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-
-// Get status class for stock levels
-function getStatusClass(status) {
-    switch (status) {
-        case 'optimal': return 'status-optimal';
-        case 'low': return 'status-low';
-        case 'out-of-stock': return 'status-out';
-        case 'overstock': return 'status-over';
-        default: return 'status-optimal';
-    }
-}
-
-// Update statistics
-function updateStatistics() {
-    const stats = {
-        totalItems: inventoryData.length,
-        totalValue: inventoryData.reduce((sum, item) => sum + (item.currentStock * item.unitPrice), 0),
-        lowStock: inventoryData.filter(item => item.status === 'low' || item.status === 'out-of-stock').length,
-        optimalStock: inventoryData.filter(item => item.status === 'optimal').length
-    };
-
-    // Update DOM elements
-    updateElementText('totalItems', stats.totalItems.toLocaleString());
-    updateElementText('totalValue', '$' + stats.totalValue.toLocaleString());
-    updateElementText('lowStockItems', stats.lowStock);
-    updateElementText('optimalStockItems', stats.optimalStock);
-}
-
-// Helper function to update element text
-function updateElementText(id, text) {
-    const element = document.getElementById(id);
-    if (element) {
-        element.textContent = text;
-    }
-}
-
-// Open add modal
-function openAddModal() {
-    currentEditId = null;
-    document.getElementById('modalTitle').textContent = 'Add New Inventory Item';
-    document.getElementById('inventoryForm').reset();
-    document.getElementById('inventoryModal').style.display = 'block';
-}
-
-// Close modal
-function closeModal() {
-    document.getElementById('inventoryModal').style.display = 'none';
-    currentEditId = null;
-}
-
-// Edit item
-function editItem(id) {
-    const item = inventoryData.find(i => i.id === id);
-    if (!item) return;
-
-    currentEditId = id;
-    document.getElementById('modalTitle').textContent = 'Edit Inventory Item';
-    
-    // Populate form fields
-    document.getElementById('productCode').value = item.productCode;
-    document.getElementById('productName').value = item.productName;
-    document.getElementById('currentStock').value = item.currentStock;
-    document.getElementById('minStock').value = item.minStock;
-    document.getElementById('maxStock').value = item.maxStock;
-    document.getElementById('location').value = item.location;
-    document.getElementById('unitPrice').value = item.unitPrice;
-    document.getElementById('unitMeasure').value = item.unitMeasure;
-    document.getElementById('batchNumber').value = item.batchNumber;
-    document.getElementById('expiryDate').value = item.expiryDate;
-    document.getElementById('supplier').value = item.supplier;
-    document.getElementById('category').value = item.category;
-    
-    document.getElementById('inventoryModal').style.display = 'block';
-}
-
-// Handle form submission
-function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const itemData = {
-        id: currentEditId || 'INV' + String(Date.now()).slice(-6),
-        productCode: formData.get('productCode'),
-        productName: formData.get('productName'),
-        currentStock: parseInt(formData.get('currentStock')),
-        minStock: parseInt(formData.get('minStock')),
-        maxStock: parseInt(formData.get('maxStock')),
-        location: formData.get('location'),
-        unitPrice: parseFloat(formData.get('unitPrice')),
-        unitMeasure: formData.get('unitMeasure'),
-        batchNumber: formData.get('batchNumber'),
-        expiryDate: formData.get('expiryDate'),
-        supplier: formData.get('supplier'),
-        category: formData.get('category'),
-        lastUpdate: new Date().toISOString().split('T')[0],
-        status: calculateStatus(parseInt(formData.get('currentStock')), parseInt(formData.get('minStock')), parseInt(formData.get('maxStock')))
-    };
-
-    if (currentEditId) {
-        // Update existing item
-        const index = inventoryData.findIndex(item => item.id === currentEditId);
-        inventoryData[index] = itemData;
-    } else {
-        // Add new item
-        inventoryData.push(itemData);
-    }
-
-    loadInventoryData();
-    updateStatistics();
-    closeModal();
-    
-    showNotification(currentEditId ? 'Item updated successfully!' : 'Item added successfully!', 'success');
-}
-
-// Calculate status based on stock levels
-function calculateStatus(current, min, max) {
-    if (current === 0) return 'out-of-stock';
-    if (current <= min) return 'low';
-    if (current >= max) return 'overstock';
-    return 'optimal';
-}
-
-// Search functionality
-function handleSearch(e) {
-    const query = e.target.value.toLowerCase();
-    const filteredData = inventoryData.filter(item => 
-        item.productCode.toLowerCase().includes(query) ||
-        item.productName.toLowerCase().includes(query) ||
-        item.location.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query)
-    );
-    
-    // Update table with filtered data
-    const tableBody = document.getElementById('inventoryTableBody');
-    if (!tableBody) return;
-
-    tableBody.innerHTML = '';
-    filteredData.forEach(item => {
-        const row = document.createElement('tr');
-        const totalValue = (item.currentStock * item.unitPrice).toFixed(2);
-        
-        row.innerHTML = `
-            <td>${item.productCode}</td>
-            <td>
-                ${item.productName}<br>
-                <small style="color: rgba(255, 255, 255, 0.7);">${item.category}</small>
-            </td>
-            <td>
-                <span class="stock-level ${getStatusClass(item.status)}">${item.currentStock}</span>
-                <div style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7);">
-                    Min: ${item.minStock} | Max: ${item.maxStock}
-                </div>
-            </td>
-            <td>${item.location}</td>
-            <td>$${item.unitPrice.toFixed(2)}</td>
-            <td>$${totalValue}</td>
-            <td>${item.batchNumber}</td>
-            <td><span class="inventory-status status-${item.status}">${item.status.replace('-', ' ').toUpperCase()}</span></td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn btn-primary btn-sm" onclick="editItem('${item.id}')">Edit</button>
-                    <button class="btn btn-warning btn-sm" onclick="adjustStock('${item.id}')">Adjust</button>
-                    <button class="btn btn-info btn-sm" onclick="viewDetails('${item.id}')">Details</button>
-                </div>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
-}
-
-// Adjust stock
-function adjustStock(id) {
-    const item = inventoryData.find(i => i.id === id);
-    if (!item) return;
-
-    const adjustment = prompt(`Current stock: ${item.currentStock}\nEnter adjustment (+/- amount):`);
-    if (adjustment === null) return;
-
-    const adjustmentValue = parseInt(adjustment);
-    if (isNaN(adjustmentValue)) {
-        showNotification('Invalid adjustment value', 'error');
-        return;
-    }
-
-    item.currentStock = Math.max(0, item.currentStock + adjustmentValue);
-    item.status = calculateStatus(item.currentStock, item.minStock, item.maxStock);
-    item.lastUpdate = new Date().toISOString().split('T')[0];
-
-    loadInventoryData();
-    updateStatistics();
-    showNotification(`Stock adjusted by ${adjustmentValue}`, 'success');
-}
-
-// View item details
-function viewDetails(id) {
-    const item = inventoryData.find(i => i.id === id);
-    if (!item) return;
-
-    const totalValue = (item.currentStock * item.unitPrice).toFixed(2);
-    const details = `
-Product Code: ${item.productCode}
-Product Name: ${item.productName}
-Category: ${item.category}
-Current Stock: ${item.currentStock} ${item.unitMeasure}
-Stock Range: ${item.minStock} - ${item.maxStock}
-Location: ${item.location}
-Unit Price: $${item.unitPrice}
-Total Value: $${totalValue}
-Batch Number: ${item.batchNumber}
-Expiry Date: ${item.expiryDate}
-Supplier: ${item.supplier}
-Status: ${item.status.toUpperCase()}
-Last Update: ${item.lastUpdate}
-    `;
-
-    alert(details);
-}
-
-// Warehouse action functions
-function stockReceiving() {
-    showNotification('🚚 Stock Receiving\n\nProcessing incoming goods and updating inventory levels.', 'info');
-}
-
-function stockIssue() {
-    showNotification('📤 Stock Issue\n\nProcessing outbound goods and reducing inventory levels.', 'info');
-}
-
-function stockTransfer() {
-    showNotification('🔄 Stock Transfer\n\nTransferring stock between warehouse locations.', 'info');
-}
-
-function cycleCounting() {
-    showNotification('📊 Cycle Counting\n\nInitiating physical inventory count for accuracy verification.', 'info');
-}
-
-// Utility functions
-function refreshData() {
-    loadInventoryData();
-    updateStatistics();
-    showNotification('Data refreshed successfully!', 'success');
-}
-
-function exportReport() {
-    showNotification('📊 Exporting inventory report...\n\nGenerating comprehensive inventory analysis.', 'info');
-}
-
-function generateBarcode(id) {
-    const item = inventoryData.find(i => i.id === id);
-    if (!item) return;
-    
-    showNotification(`📊 Generating barcode for ${item.productCode}`, 'success');
-}
-
-function bulkUpdate() {
-    showNotification('📝 Bulk Update\n\nSelect multiple items for batch operations.', 'info');
-}
-
-// Notification system
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    // Style the notification
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 10000;
-        max-width: 300px;
-        word-wrap: break-word;
-        animation: slideIn 0.3s ease;
-    `;
-
-    // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+    init() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setupCRUD());
+        } else {
+            this.setupCRUD();
         }
-    `;
-    document.head.appendChild(style);
+    }
 
-    document.body.appendChild(notification);
+    setupCRUD() {
+        // Initialize CRUD manager
+        this.crudManager = new CRUDManager({
+            apiBaseUrl: `${this.apiBaseUrl}/stock`,
+            apiKey: this.apiKey,
+            entityName: 'Finished Goods',
+            entityNamePlural: 'Finished Goods',
+            containerId: 'crudContainer'
+        });
 
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.remove();
-        style.remove();
-    }, 3000);
+        // Configure form fields
+        this.crudManager.setFormFields([
+            {
+                name: 'product_code',
+                label: '📦 Product Code',
+                type: 'text',
+                required: true,
+                placeholder: 'e.g., FG-TLE-2024-001',
+                validation: {
+                    pattern: /^FG-[A-Z0-9-]+$/,
+                    message: 'Product code must start with FG- followed by alphanumeric characters and dashes'
+                }
+            },
+            {
+                name: 'product_name',
+                label: '📋 Product Name',
+                type: 'text',
+                required: true,
+                placeholder: 'e.g., Elite Series A1 Finished Product'
+            },
+            {
+                name: 'category',
+                label: '🏷️ Product Category',
+                type: 'select',
+                required: true,
+                options: [
+                    { value: 'elite_series', label: 'Elite Series' },
+                    { value: 'standard_series', label: 'Standard Series' },
+                    { value: 'premium_series', label: 'Premium Series' },
+                    { value: 'economy_series', label: 'Economy Series' },
+                    { value: 'custom_series', label: 'Custom Series' }
+                ]
+            },
+            {
+                name: 'current_stock',
+                label: '📊 Current Stock',
+                type: 'number',
+                required: true,
+                placeholder: '100',
+                min: 0
+            },
+            {
+                name: 'unit_of_measure',
+                label: '📏 Unit of Measure',
+                type: 'select',
+                required: true,
+                options: [
+                    { value: 'pcs', label: 'Pieces' },
+                    { value: 'box', label: 'Box' },
+                    { value: 'carton', label: 'Carton' },
+                    { value: 'pallet', label: 'Pallet' },
+                    { value: 'kg', label: 'Kilogram' },
+                    { value: 'meter', label: 'Meter' }
+                ]
+            },
+            {
+                name: 'min_stock_level',
+                label: '📉 Minimum Stock Level',
+                type: 'number',
+                required: true,
+                placeholder: '50',
+                min: 0
+            },
+            {
+                name: 'max_stock_level',
+                label: '📈 Maximum Stock Level',
+                type: 'number',
+                required: true,
+                placeholder: '500',
+                min: 0
+            },
+            {
+                name: 'warehouse_location',
+                label: '📍 Warehouse Location',
+                type: 'select',
+                required: true,
+                options: [
+                    { value: 'Zone A', label: 'Zone A - Main Storage' },
+                    { value: 'Zone B', label: 'Zone B - High Value' },
+                    { value: 'Zone C', label: 'Zone C - Bulk Items' },
+                    { value: 'Zone D', label: 'Zone D - Dispatch' },
+                    { value: 'Zone E', label: 'Zone E - Cold Storage' }
+                ]
+            },
+            {
+                name: 'bin_location',
+                label: '🎯 Bin Location',
+                type: 'text',
+                placeholder: 'e.g., A-01-03-05',
+                validation: {
+                    pattern: /^[A-Z]-\d{2}-\d{2}-\d{2}$/,
+                    message: 'Bin location format: Zone-Row-Rack-Shelf (e.g., A-01-03-05)'
+                }
+            },
+            {
+                name: 'unit_price',
+                label: '💰 Unit Price (USD)',
+                type: 'number',
+                required: true,
+                placeholder: '125.00',
+                step: 0.01,
+                min: 0
+            },
+            {
+                name: 'batch_number',
+                label: '🔢 Batch Number',
+                type: 'text',
+                placeholder: 'e.g., BATCH-FG-2024-001'
+            },
+            {
+                name: 'manufacturing_date',
+                label: '🏭 Manufacturing Date',
+                type: 'date'
+            },
+            {
+                name: 'expiry_date',
+                label: '📅 Expiry Date',
+                type: 'date'
+            },
+            {
+                name: 'shelf_life_days',
+                label: '⏰ Shelf Life (Days)',
+                type: 'number',
+                placeholder: '365',
+                min: 1
+            },
+            {
+                name: 'storage_temperature',
+                label: '🌡️ Storage Temperature',
+                type: 'select',
+                options: [
+                    { value: 'ambient', label: 'Ambient (20-25°C)' },
+                    { value: 'cool', label: 'Cool (15-20°C)' },
+                    { value: 'cold', label: 'Cold (2-8°C)' },
+                    { value: 'frozen', label: 'Frozen (-18°C)' },
+                    { value: 'controlled', label: 'Temperature Controlled' }
+                ]
+            },
+            {
+                name: 'quality_status',
+                label: '✅ Quality Status',
+                type: 'select',
+                required: true,
+                options: [
+                    { value: 'approved', label: 'Approved' },
+                    { value: 'pending_qc', label: 'Pending QC' },
+                    { value: 'quarantine', label: 'Quarantine' },
+                    { value: 'rejected', label: 'Rejected' }
+                ],
+                default: 'approved'
+            },
+            {
+                name: 'last_count_date',
+                label: '🔍 Last Count Date',
+                type: 'date'
+            },
+            {
+                name: 'description',
+                label: '📝 Product Description',
+                type: 'textarea',
+                placeholder: 'Product description, specifications, and notes...'
+            }
+        ]);
+
+        // Configure table columns
+        this.crudManager.setTableColumns([
+            { 
+                key: 'product_code', 
+                label: 'Product Code',
+                render: (value, row) => `<span class="font-mono text-sm">${value || 'N/A'}</span>`
+            },
+            { 
+                key: 'product_name', 
+                label: 'Product Name',
+                render: (value, row) => `<div class="font-medium">${value || 'N/A'}</div>`
+            },
+            { 
+                key: 'category', 
+                label: 'Category',
+                render: (value, row) => {
+                    const categoryMap = {
+                        'elite_series': '🏆 Elite',
+                        'standard_series': '📋 Standard',
+                        'premium_series': '💎 Premium',
+                        'economy_series': '💰 Economy',
+                        'custom_series': '🎨 Custom'
+                    };
+                    return categoryMap[value] || '❓ Unknown';
+                }
+            },
+            { 
+                key: 'current_stock', 
+                label: 'Current Stock',
+                render: (value, row) => {
+                    const stock = parseInt(value) || 0;
+                    const minStock = parseInt(row.min_stock_level) || 0;
+                    let className = 'stock-badge ';
+                    
+                    if (stock <= minStock * 0.5) {
+                        className += 'stock-critical';
+                    } else if (stock <= minStock) {
+                        className += 'stock-low';
+                    } else {
+                        className += 'stock-optimal';
+                    }
+                    
+                    return `<span class="${className}">${stock} ${row.unit_of_measure || 'pcs'}</span>`;
+                }
+            },
+            { 
+                key: 'warehouse_location', 
+                label: 'Location',
+                render: (value, row) => `<span class="location-tag">📍 ${value || 'N/A'}</span>`
+            },
+            { 
+                key: 'unit_price', 
+                label: 'Unit Price',
+                render: (value, row) => `<span class="price-tag">$${parseFloat(value || 0).toFixed(2)}</span>`
+            },
+            { 
+                key: 'quality_status', 
+                label: 'Quality Status',
+                render: (value, row) => {
+                    const statusMap = {
+                        'approved': '<span class="status-badge status-approved">✅ Approved</span>',
+                        'pending_qc': '<span class="status-badge status-pending">⏳ Pending QC</span>',
+                        'quarantine': '<span class="status-badge status-warning">⚠️ Quarantine</span>',
+                        'rejected': '<span class="status-badge status-rejected">❌ Rejected</span>'
+                    };
+                    return statusMap[value] || '<span class="status-badge">❓ Unknown</span>';
+                }
+            },
+            { 
+                key: 'total_value', 
+                label: 'Total Value',
+                render: (value, row) => {
+                    const total = (parseFloat(row.current_stock) || 0) * (parseFloat(row.unit_price) || 0);
+                    return `<span class="value-tag">$${total.toFixed(2)}</span>`;
+                }
+            }
+        ]);
+
+        // Add custom form validation
+        this.crudManager.addFormValidation((formData) => {
+            const errors = [];
+
+            // Validate stock levels
+            if (parseInt(formData.min_stock_level) >= parseInt(formData.max_stock_level)) {
+                errors.push('Maximum stock level must be greater than minimum stock level');
+            }
+
+            // Validate current stock
+            if (parseInt(formData.current_stock) > parseInt(formData.max_stock_level)) {
+                errors.push('Current stock cannot exceed maximum stock level');
+            }
+
+            // Validate dates
+            if (formData.manufacturing_date && formData.expiry_date) {
+                const mfgDate = new Date(formData.manufacturing_date);
+                const expDate = new Date(formData.expiry_date);
+                if (expDate <= mfgDate) {
+                    errors.push('Expiry date must be after manufacturing date');
+                }
+            }
+
+            // Validate batch number format if provided
+            if (formData.batch_number && !/^BATCH-FG-\d{4}-\d{3}$/.test(formData.batch_number)) {
+                errors.push('Batch number format should be: BATCH-FG-YYYY-XXX (e.g., BATCH-FG-2024-001)');
+            }
+
+            return errors;
+        });
+
+        // Add custom data preprocessing before create/update
+        this.crudManager.addDataPreprocessor((data, action) => {
+            // Auto-generate batch number if not provided
+            if (!data.batch_number && action === 'create') {
+                const year = new Date().getFullYear();
+                const randomNum = Math.floor(Math.random() * 999) + 1;
+                data.batch_number = `BATCH-FG-${year}-${randomNum.toString().padStart(3, '0')}`;
+            }
+
+            // Auto-generate product code if not provided
+            if (!data.product_code && action === 'create') {
+                const year = new Date().getFullYear();
+                const randomNum = Math.floor(Math.random() * 9999) + 1;
+                data.product_code = `FG-TLE-${year}-${randomNum.toString().padStart(4, '0')}`;
+            }
+
+            // Set manufacturing date to today if not provided
+            if (!data.manufacturing_date && action === 'create') {
+                data.manufacturing_date = new Date().toISOString().split('T')[0];
+            }
+
+            // Calculate expiry date based on shelf life
+            if (data.shelf_life_days && data.manufacturing_date && !data.expiry_date) {
+                const mfgDate = new Date(data.manufacturing_date);
+                const expiryDate = new Date(mfgDate.getTime() + (parseInt(data.shelf_life_days) * 24 * 60 * 60 * 1000));
+                data.expiry_date = expiryDate.toISOString().split('T')[0];
+            }
+
+            return data;
+        });
+
+        // Add custom search functionality
+        this.crudManager.addCustomSearch((data, searchTerm) => {
+            const term = searchTerm.toLowerCase();
+            return data.filter(item => 
+                (item.product_code && item.product_code.toLowerCase().includes(term)) ||
+                (item.product_name && item.product_name.toLowerCase().includes(term)) ||
+                (item.batch_number && item.batch_number.toLowerCase().includes(term)) ||
+                (item.warehouse_location && item.warehouse_location.toLowerCase().includes(term)) ||
+                (item.category && item.category.toLowerCase().includes(term))
+            );
+        });
+
+        // Initialize the CRUD interface
+        this.crudManager.render();
+
+        // Set up additional event listeners
+        this.setupAdditionalFeatures();
+    }
+
+    setupAdditionalFeatures() {
+        // Add stock level indicators and warnings
+        this.crudManager.addDataPostProcessor((data) => {
+            return data.map(item => {
+                const currentStock = parseInt(item.current_stock) || 0;
+                const minStock = parseInt(item.min_stock_level) || 0;
+                
+                // Add stock status
+                if (currentStock <= minStock * 0.5) {
+                    item._stockStatus = 'critical';
+                } else if (currentStock <= minStock) {
+                    item._stockStatus = 'low';
+                } else {
+                    item._stockStatus = 'optimal';
+                }
+
+                // Calculate total value
+                item.total_value = (currentStock * (parseFloat(item.unit_price) || 0)).toFixed(2);
+
+                return item;
+            });
+        });
+
+        // Add export functionality with custom formatting
+        this.crudManager.addExportFormatter((data) => {
+            return data.map(item => ({
+                'Product Code': item.product_code,
+                'Product Name': item.product_name,
+                'Category': item.category,
+                'Current Stock': `${item.current_stock} ${item.unit_of_measure}`,
+                'Min Stock': item.min_stock_level,
+                'Max Stock': item.max_stock_level,
+                'Location': item.warehouse_location,
+                'Bin Location': item.bin_location,
+                'Unit Price': `$${item.unit_price}`,
+                'Total Value': `$${item.total_value}`,
+                'Batch Number': item.batch_number,
+                'Quality Status': item.quality_status,
+                'Manufacturing Date': item.manufacturing_date,
+                'Expiry Date': item.expiry_date,
+                'Storage Temperature': item.storage_temperature,
+                'Last Count Date': item.last_count_date,
+                'Description': item.description
+            }));
+        });
+
+        console.log('✅ Finished Goods CRUD system initialized successfully');
+    }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeINVFG();
-});
+// Initialize the Finished Goods CRUD system
+let finishedGoodsCRUD;
 
-// Export functions for global access
-window.openAddModal = openAddModal;
-window.closeModal = closeModal;
-window.editItem = editItem;
-window.adjustStock = adjustStock;
-window.viewDetails = viewDetails;
-window.stockReceiving = stockReceiving;
-window.stockIssue = stockIssue;
-window.stockTransfer = stockTransfer;
-window.cycleCounting = cycleCounting;
-window.refreshData = refreshData;
-window.exportReport = exportReport;
-window.generateBarcode = generateBarcode;
-window.bulkUpdate = bulkUpdate;
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        finishedGoodsCRUD = new FinishedGoodsCRUD();
+    });
+} else {
+    finishedGoodsCRUD = new FinishedGoodsCRUD();
+}
+
+// Export for global access
+window.finishedGoodsCRUD = finishedGoodsCRUD;

@@ -1,25 +1,250 @@
-// WIP Inventory JavaScript - PT. Topline Evergreen Manufacturing
-// Real-time data fetching from database - No caching
-let wipInventoryData = [];
-let filteredData = [];
-let editingRow = null;
+/**
+ * WIP Inventory CRUD Management
+ * PT. Topline Evergreen Manufacturing
+ */
 
+// Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('WIP Inventory page loaded');
-    loadInitialData();
-    // Auto refresh setiap 30 detik untuk live data
-    setInterval(loadWipInventoryData, 30000);
+    console.log('WIP Inventory CRUD Management loaded');
+    initializeWIPCRUD();
 });
 
-// Load initial data
-async function loadInitialData() {
-    try {
-        await loadWipInventoryData();
-    } catch (error) {
-        console.error('Error loading initial data:', error);
-        showMessage('Error loading data. Please refresh the page.', 'error');
-    }
+/**
+ * Initialize WIP CRUD Interface
+ */
+function initializeWIPCRUD() {
+    // Initialize CRUD UI for WIP Stock module
+    crudUI.init('stock/wip', 'wipCrudContainer', {
+        showCreate: true,
+        showEdit: true,
+        showDelete: true,
+        showSearch: true,
+        showPagination: true
+    });
+
+    // Override default form fields for WIP
+    crudUI.getDefaultFields = function() {
+        return {
+            partnumber: '',
+            lotnumber: '', 
+            quantity: 0,
+            operator: '',
+            pic_qc: '',
+            pic_group_produksi: '',
+            remarks: ''
+        };
+    };
+
+    // Override form field creation for specific WIP fields
+    crudUI.createFormField = function(fieldName, fieldType, value) {
+        switch (fieldName) {
+            case 'partnumber':
+                return `
+                    <input type="text" id="${fieldName}" name="${fieldName}" value="${value}" 
+                           class="form-control" placeholder="e.g., PN001" required>
+                    <small class="form-text text-muted">Part number sesuai BOM</small>
+                `;
+            
+            case 'lotnumber':
+                return `
+                    <input type="text" id="${fieldName}" name="${fieldName}" value="${value}" 
+                           class="form-control" placeholder="e.g., LOT001" required>
+                    <small class="form-text text-muted">Nomor lot untuk tracking</small>
+                `;
+                
+            case 'quantity':
+                return `
+                    <input type="number" id="${fieldName}" name="${fieldName}" value="${value}" 
+                           class="form-control" min="1" step="1" required>
+                    <small class="form-text text-muted">Jumlah unit dalam lot</small>
+                `;
+                
+            case 'operator':
+                return `
+                    <select id="${fieldName}" name="${fieldName}" class="form-control" required>
+                        <option value="">Pilih Operator</option>
+                        <option value="operator1" ${value === 'operator1' ? 'selected' : ''}>Operator 1</option>
+                        <option value="operator2" ${value === 'operator2' ? 'selected' : ''}>Operator 2</option>
+                        <option value="operator3" ${value === 'operator3' ? 'selected' : ''}>Operator 3</option>
+                        <option value="supervisor" ${value === 'supervisor' ? 'selected' : ''}>Supervisor</option>
+                    </select>
+                `;
+                
+            case 'pic_qc':
+                return `
+                    <select id="${fieldName}" name="${fieldName}" class="form-control">
+                        <option value="">Pilih PIC QC</option>
+                        <option value="qc_staff1" ${value === 'qc_staff1' ? 'selected' : ''}>QC Staff 1</option>
+                        <option value="qc_staff2" ${value === 'qc_staff2' ? 'selected' : ''}>QC Staff 2</option>
+                        <option value="qc_supervisor" ${value === 'qc_supervisor' ? 'selected' : ''}>QC Supervisor</option>
+                    </select>
+                `;
+                
+            case 'pic_group_produksi':
+                return `
+                    <select id="${fieldName}" name="${fieldName}" class="form-control">
+                        <option value="">Pilih PIC Group Produksi</option>
+                        <option value="prod_leader1" ${value === 'prod_leader1' ? 'selected' : ''}>Production Leader 1</option>
+                        <option value="prod_leader2" ${value === 'prod_leader2' ? 'selected' : ''}>Production Leader 2</option>
+                        <option value="prod_supervisor" ${value === 'prod_supervisor' ? 'selected' : ''}>Production Supervisor</option>
+                    </select>
+                `;
+                
+            case 'remarks':
+                return `
+                    <textarea id="${fieldName}" name="${fieldName}" class="form-control" rows="3" 
+                              placeholder="Catatan tambahan...">${value}</textarea>
+                `;
+                
+            default:
+                return `<input type="${fieldType}" id="${fieldName}" name="${fieldName}" value="${value}" class="form-control">`;
+        }
+    };
+
+    // Override table headers for better display
+    crudUI.formatHeader = function(header) {
+        const headerMap = {
+            'partnumber': 'Part Number',
+            'lotnumber': 'Lot Number',
+            'quantity': 'Qty',
+            'operator': 'Operator',
+            'pic_qc': 'PIC QC',
+            'pic_group_produksi': 'PIC Produksi',
+            'remarks': 'Remarks',
+            'customer': 'Customer',
+            'model': 'Model',
+            'description': 'Description',
+            'created_at': 'Created',
+            'updated_at': 'Updated'
+        };
+        return headerMap[header] || header.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    };
+
+    // Override cell value formatting for better display
+    crudUI.formatCellValue = function(value) {
+        if (value === null || value === undefined || value === '') return '-';
+        if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+        if (typeof value === 'number') return value.toLocaleString();
+        if (typeof value === 'string') {
+            // Format dates
+            if (value.includes('T') && value.includes('Z') && value.length > 15) {
+                return new Date(value).toLocaleDateString('id-ID') + ' ' + 
+                       new Date(value).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            }
+            // Truncate long text
+            if (value.length > 50) {
+                return value.substring(0, 47) + '...';
+            }
+        }
+        return value;
+    };
+
+    // Custom validation
+    crudUI.validateForm = function(formData) {
+        const errors = [];
+        
+        if (!formData.partnumber || formData.partnumber.trim() === '') {
+            errors.push('Part Number is required');
+        }
+        
+        if (!formData.lotnumber || formData.lotnumber.trim() === '') {
+            errors.push('Lot Number is required');
+        }
+        
+        if (!formData.quantity || parseInt(formData.quantity) <= 0) {
+            errors.push('Quantity must be greater than 0');
+        }
+        
+        if (!formData.operator || formData.operator.trim() === '') {
+            errors.push('Operator is required');
+        }
+        
+        return errors;
+    };
+
+    // Override form submission to include validation
+    const originalHandleSubmit = crudUI.handleSubmit;
+    crudUI.handleSubmit = async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        // Validate form
+        const errors = this.validateForm(data);
+        if (errors.length > 0) {
+            this.showError('Validation errors: ' + errors.join(', '));
+            return;
+        }
+        
+        // Call original submit handler
+        return originalHandleSubmit.call(this, e);
+    };
 }
+
+/**
+ * Custom functions for WIP management
+ */
+
+// Generate automatic lot number
+function generateLotNumber() {
+    const today = new Date();
+    const year = today.getFullYear().toString().substr(-2);
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const time = today.getHours().toString().padStart(2, '0') + 
+                 today.getMinutes().toString().padStart(2, '0');
+    
+    return `LOT${year}${month}${day}${time}`;
+}
+
+// Add auto-generation button for lot number
+function enhanceFormWithAutoGeneration() {
+    // Wait for form to be created, then enhance it
+    setTimeout(() => {
+        const lotNumberField = document.getElementById('lotnumber');
+        if (lotNumberField && !document.getElementById('btnAutoLot')) {
+            const autoButton = document.createElement('button');
+            autoButton.type = 'button';
+            autoButton.id = 'btnAutoLot';
+            autoButton.className = 'btn btn-sm btn-outline-secondary';
+            autoButton.innerHTML = 'Auto Generate';
+            autoButton.style.marginLeft = '10px';
+            autoButton.onclick = function() {
+                lotNumberField.value = generateLotNumber();
+            };
+            
+            lotNumberField.parentNode.appendChild(autoButton);
+        }
+    }, 100);
+}
+
+// Override show create modal to add enhancements
+const originalShowCreateModal = crudUI.showCreateModal;
+crudUI.showCreateModal = function() {
+    originalShowCreateModal.call(this);
+    enhanceFormWithAutoGeneration();
+};
+
+// Add custom styles for WIP specific elements
+function addCustomStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .form-text {
+            font-size: 0.875em;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize custom styles when page loads
+document.addEventListener('DOMContentLoaded', addCustomStyles);
+
+// Export functions for global access
+window.initializeWIPCRUD = initializeWIPCRUD;
+window.generateLotNumber = generateLotNumber;
 
 // Load WIP inventory data from backend - Always fresh from database
 async function loadWipInventoryData() {
