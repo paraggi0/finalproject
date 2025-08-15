@@ -1,5 +1,6 @@
 package com.bangor.system
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -26,9 +27,9 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarMain.toolbar)
 
         binding.appBarMain.fab?.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+            // Launch BOM Test Activity untuk testing API
+            val intent = Intent(this, BomTestActivity::class.java)
+            startActivity(intent)
         }
 
         val navHostFragment =

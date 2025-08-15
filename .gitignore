@@ -104,12 +104,33 @@ tmp/
 *.tmp
 *.temp
 
-# Testing files (already cleaned up)
-test-*.js
-check-*.js
-quick-test*.js
+# Testing files (cleaned up)
+*test*
+*Test*
+*TEST*
+check_*.js
+api_testing.html
+
+# Development batch files (cleaned up)
+*verify*
+*comprehensive*
+*setup*
+*restore*
+*static*
+
+# Development documentation (cleaned up)
+*TESTING*
+*INTEGRATION*
+*MIGRATION*
+*STATIC_IP*
+*UPDATE_SUMMARY*
 
 # Build outputs
 dist/
 build/
 out/
+
+# Android specific
+android/build/
+android/.gradle/
+android/local.properties

@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Network permissions untuk API calls -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Camera permission untuk QR Scanner -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,20 +17,119 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.System">
+        android:theme="@style/Theme.System"
+        android:usesCleartextTraffic="true">
+        
+        <!-- Login Activity sebagai LAUNCHER ACTIVITY -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.bangor.system.LoginActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:resizeableActivity="true"
-            android:theme="@style/Theme.System.NoActionBar"
-            tools:targetApi="24">
+            android:label="PT. Topline Manufacturing Login"
+            android:theme="@style/Theme.System.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:resizeableActivity="true"
+            android:theme="@style/Theme.System.NoActionBar"
+            tools:targetApi="24" />
+
+        <!-- Production Dashboard Activities -->
+        <activity
+            android:name="com.bangor.system.ProductionDashboardActivity"
+            android:exported="false"
+            android:label="Dashboard Produksi"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.TransferQCActivity"
+            android:exported="false"
+            android:label="Transfer QC"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.MesinOutputActivity"
+            android:exported="false"
+            android:label="Mesin Output"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.SecondProcessActivity"
+            android:exported="false"
+            android:label="Second Process"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.ScanQRStatusActivity"
+            android:exported="false"
+            android:label="Scan QR Status"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <!-- QC Dashboard Activities -->
+        <activity
+            android:name="com.bangor.system.QCDashboardActivity"
+            android:exported="false"
+            android:label="Dashboard QC"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.IncomingQCActivity"
+            android:exported="false"
+            android:label="Incoming QC"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.OutgoingQCActivity"
+            android:exported="false"
+            android:label="Outgoing QC"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.NGReportActivity"
+            android:exported="false"
+            android:label="NG Report"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.QCHistoryActivity"
+            android:exported="false"
+            android:label="QC History"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <!-- Warehouse Dashboard -->
+        <activity
+            android:name="com.bangor.system.WarehouseDashboardActivity"
+            android:exported="false"
+            android:label="Dashboard Warehouse"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <!-- Support Activities -->
+        <activity
+            android:name="com.bangor.system.QRScannerActivity"
+            android:exported="false"
+            android:label="QR Scanner"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <activity
+            android:name="com.bangor.system.ProductDetailActivity"
+            android:exported="false"
+            android:label="Product Detail"
+            android:theme="@style/Theme.System.NoActionBar" />
+
+        <!-- BOM Test Activity untuk testing API -->
+        <activity
+            android:name=".BomTestActivity"
+            android:exported="false"
+            android:label="BOM Test"
+            android:theme="@style/Theme.System" />
+
     </application>
 
 </manifest>

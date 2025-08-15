@@ -6,34 +6,26 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <!-- Header -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_color"
-            app:title="Transfer QC"
-            app:titleTextColor="@android:color/white" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary_color"
+        app:title="Transfer QC"
+        app:titleTextColor="@android:color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Scan QR Section -->
+            <!-- QR Scanner Section -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +40,7 @@
                     android:padding="20dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Scan QR Code Produk"
                         android:textColor="@color/primary_color"
@@ -60,23 +52,13 @@
                         android:id="@+id/btnScanQR"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:layout_marginBottom="16dp"
-                        android:backgroundTint="@color/button_blue"
                         android:text="SCAN QR CODE"
                         android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:backgroundTint="@color/primary_color"
                         app:cornerRadius="8dp"
-                        app:icon="@drawable/ic_qr_code"
-                        app:iconTint="@android:color/white" />
-
-                    <TextView
-                        android:id="@+id/tvScanResult"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_gray"
-                        android:padding="12dp"
-                        android:text="Hasil scan akan muncul di sini..."
-                        android:textColor="@color/light_gray"
-                        android:textSize="14sp" />
+                        app:icon="@android:drawable/ic_menu_camera"
+                        app:iconGravity="textStart" />
 
                 </LinearLayout>
 
@@ -97,15 +79,15 @@
                     android:padding="20dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Data Produk"
+                        android:text="Data Transfer QC"
                         android:textColor="@color/primary_color"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Part Number -->
+                    <!-- Partnumber -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +97,7 @@
                         app:hintTextColor="@color/primary_color">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPartNumber"
+                            android:id="@+id/etPartnumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text" />
@@ -152,8 +134,7 @@
                             android:id="@+id/etDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textMultiLine"
-                            android:lines="2" />
+                            android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -178,7 +159,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="24dp"
                         android:hint="Quantity"
                         app:boxStrokeColor="@color/primary_color"
                         app:hintTextColor="@color/primary_color">
@@ -191,39 +172,22 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- PIC (Read-only, filled from login) -->
-                    <com.google.android.material.textfield.TextInputLayout
+                    <!-- Submit Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSubmit"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:hint="PIC"
-                        app:boxStrokeColor="@color/primary_color"
-                        app:hintTextColor="@color/primary_color">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPIC"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:inputType="text" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="56dp"
+                        android:text="Submit Transfer QC"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:backgroundTint="@color/primary_color"
+                        app:cornerRadius="8dp"
+                        app:icon="@android:drawable/ic_menu_send"
+                        app:iconGravity="textStart" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Submit Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="#4CAF50"
-                android:text="SIMPAN DATA"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                app:cornerRadius="8dp" />
 
         </LinearLayout>
 

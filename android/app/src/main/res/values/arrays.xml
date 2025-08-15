@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- QC Status Options for Transfer QC Activity -->
+    <string-array name="qc_status_options">
+        <item>Pass</item>
+        <item>Fail</item>
+        <item>Pending</item>
+        <item>Under Review</item>
+        <item>Rework Required</item>
+    </string-array>
+    
+    <!-- Machine Status Options -->
+    <string-array name="machine_status_options">
+        <item>Running</item>
+        <item>Stopped</item>
+        <item>Maintenance</item>
+        <item>Setup</item>
+        <item>Breakdown</item>
+    </string-array>
+    
+    <!-- Process Type Options -->
+    <string-array name="process_type_options">
+        <item>SMT</item>
+        <item>AOI</item>
+        <item>ICT</item>
+        <item>FCT</item>
+        <item>Assembly</item>
+        <item>Packaging</item>
+    </string-array>
+    
+    <!-- Shift Options -->
+    <string-array name="shift_options">
+        <item>Day Shift</item>
+        <item>Night Shift</item>
+        <item>Morning Shift</item>
+        <item>Evening Shift</item>
+    </string-array>
+</resources>

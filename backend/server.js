@@ -9,22 +9,7 @@ require('dotenv').config();
 
 const { initializeDatabase } = require('./config/databaseAdapter');
 
-// Import routes
-const actualProductionRoutes = require('./routes/actualProduction'); // Routes sesuai database aktual
-const mobileRoutes = require('./routes/mobile'); // Mobile Android routes (updated)
-const authRoutes = require('./routes/auth'); // Authentication routes
-const websiteRoutes = require('./routes/website'); // Website CRUD routes
-const dashboardRoutes = require('./routes/dashboard'); // Dashboard routes
-const qrRoutes = require('./routes/qr'); // QR Code routes untuk mobile
-const adminRoutes = require('./routes/admin'); // Admin CRUD routes
-const exportRoutes = require('./routes/export'); // Export CSV routes
-const stockRoutes = require('./routes/stock'); // Stock API untuk frontend
-const machinesRoutes = require('./routes/machines'); // Machines API untuk frontend
-const masterDataRoutes = require('./routes/masterData'); // Master Data routes
-const inventoryRoutes = require('./routes/inventory'); // Inventory API untuk material & component
-const usersRoutes = require('./routes/users'); // User management routes
-const qcRoutes = require('./routes/qc'); // QC routes untuk Quality Control
-const warehouseRoutes = require('./routes/warehouse'); // Warehouse routes untuk WH management
+// Import organized API routes only
 
 /**
  * PT. Topline Evergreen Manufacturing Production System
@@ -67,6 +52,10 @@ app.use(cors({
         'http://127.0.0.1:8080',     // Alternative localhost
         'http://localhost:3000',      // Development frontend
         'http://127.0.0.1:3000',     // Alternative dev frontend
+        'http://192.168.1.184:3000', // Static IP frontend
+        'http://192.168.1.184:8080', // Static IP alternative
+        'http://192.168.1.59:3000',  // DHCP IP frontend (fallback)
+        'http://192.168.1.59:8080',  // DHCP IP alternative (fallback)
         process.env.CORS_ORIGIN || '*'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -97,22 +86,16 @@ app.use(express.static(path.join(__dirname, '../frontend'), {
     }
 }));
 
-// API routes
-app.use('/api/production', actualProductionRoutes); // Routes sesuai dengan database aktual
-app.use('/api/mobile', mobileRoutes); // Mobile API routes (POST, GET, UPDATE only) - Updated
-app.use('/api/auth', authRoutes); // Authentication routes
-app.use('/api/website', websiteRoutes); // Website CRUD routes (Full CRUD)
-app.use('/api/dashboard', dashboardRoutes); // Dashboard routes untuk semua departement
-app.use('/api/qr', qrRoutes); // QR Code routes untuk mobile android
-app.use('/api/admin', adminRoutes); // Admin CRUD routes untuk website
-app.use('/api/export', exportRoutes); // Export CSV routes untuk website admin
-app.use('/api/stock', stockRoutes); // Stock API untuk frontend dashboard
-app.use('/api/machines', machinesRoutes); // Machines API untuk frontend dashboard
-app.use('/api/master', masterDataRoutes); // Master Data API untuk material & component
-app.use('/api/inventory', inventoryRoutes); // Inventory API untuk material & component stock
-app.use('/api/users', usersRoutes); // User management API untuk web & android
-app.use('/api/qc', qcRoutes); // QC API untuk Quality Control modules
-app.use('/api/warehouse', warehouseRoutes); // Warehouse API untuk WH management modules
+// API routes - ORGANIZED STRUCTURE ONLY
+// ========================================
+
+// ANDROID API - Complete mobile functionality
+const androidApiRoutes = require('./routes/api/android');
+app.use('/api/android', androidApiRoutes);
+
+// WEBSITE API - Complete dashboard & admin functionality  
+const websiteApiRoutes = require('./routes/api/website');
+app.use('/api/website', websiteApiRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -213,21 +196,21 @@ async function startServer() {
         console.log('✅ Database connection successful!');
 
         // Start server
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log('🚀 Server started successfully!');
             console.log(`📡 Server running on: http://localhost:${PORT}`);
+            console.log(`🌐 Network access: http://192.168.1.184:${PORT} (Public Static IP)`);
+            console.log(`📱 Android access: http://192.168.1.184:${PORT} (Direct IP)`);
             console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`📊 API Version: ${process.env.API_VERSION || 'v1'}`);
             console.log('');
             console.log('📋 Available endpoints:');
-            console.log(`   Health Check: http://localhost:${PORT}/api/health`);
-            console.log(`   Database Test: http://localhost:${PORT}/api/db-test`);
-            console.log(`   Production API (Actual): http://localhost:${PORT}/api/production`);
-            console.log(`   Production API (Legacy): http://localhost:${PORT}/api/v1/production`);
-            console.log(`   Mobile API: http://localhost:${PORT}/api/mobile`);
-            console.log(`   Statistics API: http://localhost:${PORT}/api/v1/stats`);
+            console.log(`   Health Check: http://192.168.1.184:${PORT}/api/health`);
+            console.log(`   Database Test: http://192.168.1.184:${PORT}/api/db-test`);
+            console.log(`   Android API: http://192.168.1.184:${PORT}/api/android`);
+            console.log(`   Website API: http://192.168.1.184:${PORT}/api/website`);
             console.log('');
-            console.log('✅ PT. Topline Evergreen Manufacturing API is ready to serve requests!');
+            console.log('✅ PT. Topline Evergreen Manufacturing API ready for Android & Website!');
         });
 
     } catch (error) {

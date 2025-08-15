@@ -6,4 +6,3 @@
         android:endColor="@color/background_gradient_end"
         android:type="linear" />
 </shape>
-

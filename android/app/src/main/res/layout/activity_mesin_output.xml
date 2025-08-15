@@ -6,32 +6,24 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <!-- Header -->
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_color"
-            app:title="Mesin Output"
-            app:titleTextColor="@android:color/white" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary_color"
+        app:title="Mesin Output"
+        app:titleTextColor="@android:color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <!-- Data Entry Form -->
             <com.google.android.material.card.MaterialCardView
@@ -48,7 +40,7 @@
                     android:padding="20dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Data Output Mesin"
                         android:textColor="@color/primary_color"
@@ -67,25 +59,25 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                         <AutoCompleteTextView
-                            android:id="@+id/spinnerCustomer"
+                            android:id="@+id/acCustomer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Description Dropdown (Cascading) -->
+                    <!-- Description Dropdown (Bertingkat dari Customer) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:hint="Description"
+                        android:hint="Description/Model"
                         app:boxStrokeColor="@color/primary_color"
                         app:hintTextColor="@color/primary_color"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
                         <AutoCompleteTextView
-                            android:id="@+id/spinnerDescription"
+                            android:id="@+id/acDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none"
@@ -93,7 +85,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Part Number (Auto-filled from Description) -->
+                    <!-- Part Number (Lookup dari Description) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -103,15 +95,14 @@
                         app:hintTextColor="@color/primary_color">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPartNumber"
+                            android:id="@+id/etPartnumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Model (Auto-filled from Description) -->
+                    <!-- Model (Lookup dari Description) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -124,12 +115,11 @@
                             android:id="@+id/etModel"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:inputType="text" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Quantity OK -->
+                    <!-- Quantity OK (Manual Input) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -146,7 +136,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Quantity NG -->
+                    <!-- Quantity NG (Manual Input) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -163,7 +153,7 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Operator -->
+                    <!-- Operator (Manual Input) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -180,12 +170,12 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- PIC (Read-only, filled from login) -->
+                    <!-- PIC (Readonly dari Login) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:hint="PIC"
+                        android:layout_marginBottom="24dp"
+                        android:hint="PIC (dari Login)"
                         app:boxStrokeColor="@color/primary_color"
                         app:hintTextColor="@color/primary_color">
 
@@ -193,26 +183,27 @@
                             android:id="@+id/etPIC"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:inputType="text" />
+                            android:inputType="text"
+                            android:enabled="false" />
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Submit Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="Submit Mesin Output"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:backgroundTint="@color/primary_color"
+                        app:cornerRadius="8dp"
+                        app:icon="@android:drawable/ic_menu_send"
+                        app:iconGravity="textStart" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Submit Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginBottom="16dp"
-                android:backgroundTint="#4CAF50"
-                android:text="SIMPAN DATA"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                app:cornerRadius="8dp" />
 
         </LinearLayout>
 
