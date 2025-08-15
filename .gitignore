@@ -1,0 +1,11 @@
+node_modules/
+.env
+*.log
+.idea/
+.vscode/
+android/
+deploy/
+test/
+demo/
+*.tmp
+*.temp
